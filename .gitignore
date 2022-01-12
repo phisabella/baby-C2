@@ -6,6 +6,7 @@
 /dataSources.local.xml
 # Editor-based HTTP Client requests
 /httpRequests/
+
 /venv
 /.idea
 /.vs
@@ -15,3 +16,4 @@
 /Implant/Implant/x64
 /Implant/x64
 /Implant/.vs
+/Implant/.vs/Implant/
