@@ -10,3 +10,8 @@
 /.idea
 /.vs
 /.vscode
+/Implant/.vs
+*.pdb
+/Implant/Implant/x64
+/Implant/x64
+/Implant/.vs

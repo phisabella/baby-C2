@@ -45,7 +45,7 @@ class Tasks(Resource):
 
 class Results(Resource):
     def get(self):
-        results = Result.object().to_json()
+        results = Result.objects().to_json()
         return Response(results, mimetype="application/json", status=200)
 
     def post(self):
@@ -59,7 +59,7 @@ class Results(Resource):
             Task.objects().delete()
             return Response(tasks, mimetype="application/json", status=200)
         else:
-            tasks = Task.object().to_json()
+            tasks = Task.objects().to_json()
             Task.objects().delete()
             return Response(tasks, mimetype="application/json", status=200)
 
@@ -75,7 +75,7 @@ class History(Resource):
             for field in json_obj[i]:
                 result_obj = {
                     "task_id": field,
-                    "task_type": json_obj[i][field]
+                    "task_results": json_obj[i][field]
                 }
                 result_obj_collection.append(result_obj)
         for result in result_obj_collection:

