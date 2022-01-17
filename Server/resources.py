@@ -10,30 +10,30 @@ from database.models import Task, Result, TaskHistory
 class Tasks(Resource):
     # list tasks
     def get(self):
-        #将model对象转化为json格式
+        # 将model对象转化为json格式
         tasks = Task.objects().to_json()
         return Response(tasks, mimetype="application/json", status=200)
 
     # #add tasks
     def post(self):
         body = request.get_json()
-        #dump 将obj转化为JSON字符串
-        #loads将 包含JSON的转化为py obj
+        # dump 将obj转化为JSON字符串
+        # loads将 包含JSON的转化为py obj
         json_obj = json.loads(json.dumps(body))
         obj_num = len(body)
-        for i in range(len(body)):
+        for i in range(obj_num):
             json_obj[i]['task_id'] = str(uuid.uuid4())
             # 可以将不定数量的参数传递给一个函数 ,* = tuple , ** = dict
             Task(**json_obj[i]).save()
-            task_option = []
+            task_options = []
             for key in json_obj[i].keys():
                 if (key != "task_type" and key != "task_id"):
-                    task_option.append(key + ":" + json_obj[i][key])
+                    task_options.append(key + ":" + json_obj[i][key])
             TaskHistory(
                 task_id=json_obj[i]['task_id'],
                 task_type=json_obj[i]['task_type'],
                 task_object=json.dumps(json_obj),
-                task_options=task_option,
+                task_options=task_options,
                 task_results=""
             ).save()
         # Return the last Task objects that were added
