@@ -10,6 +10,18 @@ Known bugs:
 
 
 
+## How to use
+
+run server.py(MongoDB required) , and run Implant.
+
+Then run command in client:
+
+```python
+python client.py add-tasks --tasktype execute --options command="ipconfig"
+```
+
+
+
 VirusTotal for fun :)
 
-![image-20220316211923472](virusTotal)
+![virusTotal](virusTotal.jpg)
