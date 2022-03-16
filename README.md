@@ -8,3 +8,8 @@ Known bugs:
 
 ~~Error would be thrown if the results have any chinese charactor.~~ (<nlohmann/json.hpp> can't read GBK , convert json contents from GBK to UTF-8 can fix it)
 
+
+
+VirusTotal for fun :)
+
+![image-20220316211923472](virusTotal)
