@@ -4,7 +4,7 @@ import click
 import pprint
 
 # Configuration Settings
-listening_post_addr = "http://127.0.0.1:5000"
+listening_post_addr = "http://172.16.144.1:2333"
 
 
 # Helper functions
@@ -83,18 +83,21 @@ def add_tasks(tasktype, options):
                 keyval_string += f'"{key}":"{value}",'
             requests_payload_string = f'[{{"task_type":"{tasktype}",{keyval_string[:-1]}}}]'
             requests_payload = json.loads(requests_payload_string)
+            print(requests_payload)
             pprint.pprint(api_post_request(api_endpoint, requests_payload))
 
         # Otherwise, just print the key/value for the single option provided
         else:
             request_payload_string = f'[{{"task_type":"{tasktype}","{key}":"{value}"}}]'
             request_payload = json.loads(request_payload_string)
+            print(request_payload)
             pprint.pprint(api_post_request(api_endpoint, request_payload))
 
     # Otherwise, we just submit a payload with the task type specified
     else:
         request_payload_string = f'[{{"task_type":"{tasktype}"}}]'
         request_payload = json.loads(request_payload_string)
+        print(request_payload)
         pprint.pprint(api_post_request(api_endpoint, request_payload))
     print()
 

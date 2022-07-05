@@ -73,8 +73,10 @@ def readFromDatabase(database):
 
 
 def writeToDatabase(database, newData):
+    print("before")
     with open(database, "ab") as d:
         pickle.dump(newData, d, pickle.HIGHEST_PROTOCOL)
+    print("after")
 
 
 def clearDatabase(database):

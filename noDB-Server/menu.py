@@ -3,7 +3,6 @@ from os import system, error
 
 import readline
 
-import listenerHelper
 from agentsHelper import *
 from payloadHelper import *
 
@@ -77,131 +76,35 @@ class Menu:
 
         for i in self.commands:
             print(" {}".format(i) + " " * (32 - len(i)) + "{}".format(self.commands[i][0]) + " " * (
-                        36 - len(self.commands[i][0])) + "{}".format(self.commands[i][1]))
+                    36 - len(self.commands[i][0])) + "{}".format(self.commands[i][1]))
 
 
 print(cRESET)
 
 
-def evListeners(command, args):
-    if command == "list":
-        # qweqweqweqwe
-        listenerHelper.viewListeners()
-
-    elif command == "start":
-        listenerHelper.startListener(args)
-
-    elif command == "stop":
-        listenerHelper. stopListener(args)
-
-    elif command == "remove":
-        listenerHelper. removeListener(args)
-
-def evAgents(command, args):
-    if command == "list":
-        viewAgents()
-    elif command == "remove":
-        removeAgent(args)
-    elif command == "rename":
-        renameAgent(args)
-    elif command == "interact":
-        interactWithAgent(args)
-
-def evPayloads(command, args):
-
-    if command == "help":
-        payloadMenu.showHelp()
-    elif command == "home":
-        home()
-    elif command == "exit":
-        Exit()
-    elif command == "list":
-        viewPayloads()
-    elif command == "generate":
-        generatePayload(args)
-
-def listenersHelper():
-    listenerMenu.clearScreen()
-
-    while True:
-        try:
-            command, args = listenerMenu.parse()
-        except:
-            continue
-        if command not in ListenersCommands:
-            error("Invalid command.")
-        elif command == "home":
-            home()
-        elif command == "help":
-            listenerMenu.showHelp()
-        elif command == "exit":
-            Exit()
-        else:
-            evListeners(command, args)
-
-
-def agentsHelper():
-    agentsMenu.clearScreen()
-
-    while True:
-
-        try:
-            command, args = agentsMenu.parse()
-        except:
-            continue
-
-        if command not in AgentsCommands:
-            error("Invalid command.")
-        elif command == "home":
-            home()
-        elif command == "help":
-            agentsMenu.showHelp()
-        elif command == "exit":
-            Exit()
-        else:
-            evAgents(command, args)
-
-
-def payloadsHelper():
-    payloadMenu.clearScreen()
-
-    while True:
-
-        try:
-            command, args = payloadMenu.parse()
-        except:
-            continue
-
-        if command not in PayloadsCommands:
-            error("Invalid command.")
-        else:
-            evPayloads(command, args)
-
-def evAgents(command, args):
-    if command == "list":
-        viewAgents()
-    elif command == "remove":
-        removeAgent(args)
-    elif command == "rename":
-        renameAgent(args)
-    elif command == "interact":
-        interactWithAgent(args)
-
-
 def evHome(command, args):
     if command == "help":
         homeMenu.showHelp()
-    elif command == "home":
-        home()
-    elif command == "listeners":
-        listenersHelper()
-    elif command == "agents":
-        agentsHelper()
-    elif command == "payloads":
-        payloadsHelper()
+    elif command == "lista":
+        viewAgents()
+    elif command == "removea":
+        removeAgent(args)
+    elif command == "interact":
+        interactWithAgent(args)
+    elif command == "listl":
+        listenerHelper.viewListeners()
+    elif command == "start":
+        listenerHelper.startListener(args)
+    elif command == "stop":
+        listenerHelper.stopListener(args)
+    elif command == "removel":
+        listenerHelper.removeListener(args)
+    elif command == "listp":
+        viewPayloads()
+    elif command == "generate":
+        generatePayload(args)
     elif command == "exit":
         Exit()
-
 
 def home():
     homeMenu.clearScreen()
@@ -214,6 +117,7 @@ def home():
             error("Invalid command.")
         else:
             evHome(command, args)
+            print("diaoi yong ing")
 
 
 def Exit():
@@ -221,34 +125,28 @@ def Exit():
     exit()
 
 
-agentsMenu = Menu("agents")
-listenerMenu = Menu("listeners")
-payloadMenu = Menu("payloads")
-homeMenu = Menu("c2")
+homeMenu = Menu("server")
 
-agentsMenu.registerCommand("list", "List active agents.", "")
-agentsMenu.registerCommand("interact", "Interact with an agent.", "<name>")
-agentsMenu.registerCommand("rename", "Rename agent.", "<agent> <new name>")
-agentsMenu.registerCommand("remove", "Remove an agent.", "<name>")
+homeMenu.registerCommand("listagents", "List active agents.", "")
+homeMenu.registerCommand("lista", "List active agents.", "")
+homeMenu.registerCommand("interact", "Interact with an agent.", "<name>")
+homeMenu.registerCommand("renameagent", "Rename agent.", "<agent> <new name>")
+homeMenu.registerCommand("renamea", "Rename agent.", "<agent> <new name>")
+homeMenu.registerCommand("removeagent", "Remove an agent.", "<name>")
+homeMenu.registerCommand("removea", "Remove an agent.", "<name>")
 
-listenerMenu.registerCommand("list", "List active listeners.", "")
-listenerMenu.registerCommand("start", "Start a listener.", "<name> <port> <interface> | <name>")
-listenerMenu.registerCommand("stop", "Stop an active listener.", "<name>")
-listenerMenu.registerCommand("remove", "Remove a listener.", "<name>")
+homeMenu.registerCommand("listlisteners", "List active listeners.", "")
+homeMenu.registerCommand("listl", "List active listeners.", "")
+homeMenu.registerCommand("start", "Start a listener.", "<name> <port> <interface> | <name>")
+homeMenu.registerCommand("stoplistener", "Stop an active listener.", "<name>")
+homeMenu.registerCommand("stopl", "Stop an active listener.", "<name>")
+homeMenu.registerCommand("removelistener", "Remove a listener.", "<name>")
+homeMenu.registerCommand("removel", "Remove a listener.", "<name>")
 
-payloadMenu.registerCommand("list", "List available payload types.", "")
-payloadMenu.registerCommand("generate", "Generate a payload", "<type> <arch> <listener> <output name>")
+homeMenu.registerCommand("listpayloads", "List available payload types.", "")
+homeMenu.registerCommand("listp", "List available payload types.", "")
+homeMenu.registerCommand("generate", "Generate a payload", "<type> <arch> <listener> <output name>")
 
-homeMenu.registerCommand("listeners", "Manage listeners.", "")
-homeMenu.registerCommand("agents", "Manage active agents.", "")
-homeMenu.registerCommand("payloads", "Generate payloads.", "")
-
-agentsMenu.uCommands()
-listenerMenu.uCommands()
-payloadMenu.uCommands()
 homeMenu.uCommands()
 
-AgentsCommands = agentsMenu.Commands
-ListenersCommands = listenerMenu.Commands
-PayloadsCommands = payloadMenu.Commands
 homeCommands = homeMenu.Commands
