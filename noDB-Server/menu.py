@@ -127,26 +127,18 @@ def Exit():
 
 homeMenu = Menu("server")
 
-homeMenu.registerCommand("listagents", "List active agents.", "")
-homeMenu.registerCommand("lista", "List active agents.", "")
-homeMenu.registerCommand("interact", "Interact with an agent.", "<name>")
-homeMenu.registerCommand("renameagent", "Rename agent.", "<agent> <new name>")
+
 homeMenu.registerCommand("renamea", "Rename agent.", "<agent> <new name>")
-homeMenu.registerCommand("removeagent", "Remove an agent.", "<name>")
 homeMenu.registerCommand("removea", "Remove an agent.", "<name>")
-
-homeMenu.registerCommand("listlisteners", "List active listeners.", "")
+homeMenu.registerCommand("lista", "List active agents.", "")
 homeMenu.registerCommand("listl", "List active listeners.", "")
-homeMenu.registerCommand("start", "Start a listener.", "<name> <port> <interface> | <name>")
-homeMenu.registerCommand("stoplistener", "Stop an active listener.", "<name>")
-homeMenu.registerCommand("stopl", "Stop an active listener.", "<name>")
-homeMenu.registerCommand("removelistener", "Remove a listener.", "<name>")
-homeMenu.registerCommand("removel", "Remove a listener.", "<name>")
-
-homeMenu.registerCommand("listpayloads", "List available payload types.", "")
 homeMenu.registerCommand("listp", "List available payload types.", "")
+homeMenu.registerCommand("start", "Start a listener.", "<name> <port> <interface> | <name>")
+homeMenu.registerCommand("stopl", "Stop an active listener.", "<name>")
+homeMenu.registerCommand("removel", "Remove a listener.", "<name>")
 homeMenu.registerCommand("generate", "Generate a payload", "<type> <arch> <listener> <output name>")
-
+homeMenu.registerCommand("help", "Show helps", "")
+homeMenu.registerCommand("exit", "Save and Exit", "")
 homeMenu.uCommands()
 
 homeCommands = homeMenu.Commands
