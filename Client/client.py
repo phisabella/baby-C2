@@ -1,11 +1,13 @@
+import uuid
+
 import requests
 import json
 import click
 import pprint
 
 # Configuration Settings
-listening_post_addr = "http://172.16.144.1:2333"
-
+# listening_post_addr = "http://127.0.0.1:5000"
+listening_post_addr = "http://192.168.85.169:3344"
 
 # Helper functions
 def api_get_request(endpoint):
@@ -75,23 +77,40 @@ def add_tasks(tasktype, options):
             value = key_vals[1]
             pair = {key: value}
             task_options_dict.update(pair)
-
         # If more than one option was provided, format and append them into a single string
         if len(task_options_dict) > 1:
             keyval_string = ""
             for key, value in task_options_dict.items():
                 keyval_string += f'"{key}":"{value}",'
-            requests_payload_string = f'[{{"task_type":"{tasktype}",{keyval_string[:-1]}}}]'
+            requests_payload_string = f'[{{"task_id":"{str(uuid.uuid4())}","task_type":"{tasktype}",{keyval_string[:-1]}}}]'
             requests_payload = json.loads(requests_payload_string)
             print(requests_payload)
             pprint.pprint(api_post_request(api_endpoint, requests_payload))
 
         # Otherwise, just print the key/value for the single option provided
         else:
-            request_payload_string = f'[{{"task_type":"{tasktype}","{key}":"{value}"}}]'
+            request_payload_string = f'[{{"task_id":"{str(uuid.uuid4())}","task_type":"{tasktype}","{key}":"{value}"}}]'
             request_payload = json.loads(request_payload_string)
             print(request_payload)
             pprint.pprint(api_post_request(api_endpoint, request_payload))
+
+
+        # # If more than one option was provided, format and append them into a single string
+        # if len(task_options_dict) > 1:
+        #     keyval_string = ""
+        #     for key, value in task_options_dict.items():
+        #         keyval_string += f'"{key}":"{value}",'
+        #     requests_payload_string = f'[{{"task_type":"{tasktype}",{keyval_string[:-1]}}}]'
+        #     requests_payload = json.loads(requests_payload_string)
+        #     print(requests_payload)
+        #     pprint.pprint(api_post_request(api_endpoint, requests_payload))
+        #
+        # # Otherwise, just print the key/value for the single option provided
+        # else:
+        #     request_payload_string = f'[{{"task_type":"{tasktype}","{key}":"{value}"}}]'
+        #     request_payload = json.loads(request_payload_string)
+        #     print(request_payload)
+        #     pprint.pprint(api_post_request(api_endpoint, request_payload))
 
     # Otherwise, we just submit a payload with the task type specified
     else:

